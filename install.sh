@@ -14,18 +14,22 @@ for filename in $FILES; do
   existing_file="$HOME/.$filename"
   new_target="$PWD/$filename"
 
-  if [[ -f $existing_file ]] && [[ "$(readlink $existing_file)" == "$new_target" ]]; then
+  if [[ -L $existing_file ]] && [[ "$(readlink $existing_file)" == "$new_target" ]]; then
     printf "$blue $(basename $new_target) unchanged $reset\n"
     continue
-  elif [[ -f $existing_file ]]; then
+  elif [[ -e $existing_file ]]; then
     answer="none"
-    while [[ "$answer" =~ [^yNdq] ]] 
+    while [[ "$answer" =~ [^yNdqr] ]] 
     do
-      printf "$red File $existing_file exists and contents do not match $new_target, proceed anyway? [y/N/(d)iff/(q)uit]$reset\n"
+      if [[ -L $existing_file ]]; then
+        printf "$red Symlink $existing_file exists but points elsewhere. Overwrite, remove, or skip? [y/N/(d)iff/(r)emove/(q)uit]$reset\n"
+      else
+        printf "$red File $existing_file exists and contents do not match $new_target, proceed anyway? [y/N/(d)iff/(q)uit]$reset\n"
+      fi
       printf " > "
 
       read answer
-      [[ "$answer" =~ [^yNdq] ]] && printf "$yellow Invalid answer: $answer $reset\n"
+      [[ "$answer" =~ [^yNdqr] ]] && printf "$yellow Invalid answer: $answer $reset\n"
     done
 
     [[ "$answer" == "q" ]] && exit
@@ -41,10 +45,14 @@ for filename in $FILES; do
 
       answer="none"
     elif [[ "$answer" == 'd' ]]; then
-      paste -d \\n "$existing_file" "$new_target" | awk 'NR%2 == 0 { print "\033[1;94m" $0 "\033[0m"; next } { print "\033[1;90m" $0 "\033[0m"}' | less
+      paste -d \n "$existing_file" "$new_target" | awk 'NR%2 == 0 { print "\033[1;94m" $0 "\033[0m"; next } { print "\033[1;90m" $0 "\033[0m"}' | less
+    elif [[ "$answer" == 'r' ]]; then
+      printf "$yellow Removing symlink $existing_file $reset\n"
+      rm $existing_file
     fi
   else
     printf "$green $(basename $new_target) linked $reset\n"
     ln -s $new_target $existing_file
   fi
 done
+

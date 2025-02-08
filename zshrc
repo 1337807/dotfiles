@@ -59,4 +59,5 @@ unset __conda_setup
 
 
 export PATH="$PATH:/Users/jonan/.risc0/bin"
-eval "$(/Users/jonanscheffler/.local/bin/mise activate zsh)"
+export PATH="/opt/homebrew/opt/openjdk/bin:$PATH"
+eval "$(/Users/jonan/.local/bin/mise activate zsh)"

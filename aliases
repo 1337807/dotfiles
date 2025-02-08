@@ -3,8 +3,8 @@ alias sy="say -v 'Sandy en_GB'"
 alias dk="cd ~/docker"
 alias dot="cd ~/src/dotfiles"
 
-alias n="vim ~/Dropbox/2024/notes"
-alias nn="cd ~/Dropbox/2024/notes"
+alias n="mkdir -p ~/Dropbox/2025/notes; vim ~/Dropbox/2025/notes"
+alias nn="mkdir -p ~/Dropbox/2025/notes; cd ~/Dropbox/2025/notes"
 alias be="bundle exec"
 alias ag='ag --path-to-ignore ~/.agignore'
 
@@ -18,7 +18,7 @@ alias hideall='defaults write com.apple.finder AppleShowAllFiles FALSE; killall 
 alias kglock='sudo pfctl -Fa -f /etc/kg.pf.conf -e'
 alias kgunlock='sudo pfctl -Fa -f /etc/pf.conf -e'
 
-alias drop="cd ~/Dropbox/2023"
+alias drop="mkdir -p ~/Dropbox/2025; cd ~/Dropbox/2025"
 alias vim="nvim"
 alias v="vim ."
 alias vv="vim ~/.vimrc"
