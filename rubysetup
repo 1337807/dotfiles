@@ -1,2 +1,2 @@
 source /opt/homebrew/opt/chruby/share/chruby/chruby.sh
-chruby 3.2.2
+chruby 3.4.1

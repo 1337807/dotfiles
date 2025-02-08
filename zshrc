@@ -6,6 +6,11 @@ export LANG=en_US.utf-8
 export RUBYOPT="-W:no-deprecated -W:no-experimental"
 export EDITOR="vim"
 
+# brew info java
+# For compilers to find openjdk you may need to set:
+#   export CPPFLAGS="-I/opt/homebrew/opt/openjdk/include"
+export CPPFLAGS="-I/opt/homebrew/opt/openjdk/include"
+
 GPG_TTY=$(tty)
 export GPG_TTY
 # stty sane - not sure why this was here, iterm fancy prompt complained
@@ -15,9 +20,6 @@ export GPG_TTY
 [[ ! -f ~/.global.env ]] || source ~/.global.env
 [[ ! -f ~/.p10k.zsh ]]   || source ~/.p10k.zsh
 [[ ! -f ~/.plugins ]]    || source ~/.plugins
-[[ ! -f ~/.rubysetup ]]  || source ~/.rubysetup
-[[ ! -f ~/.nodesetup ]]  || source ~/.nodesetup
-[[ ! -f ~/.pythonsetup ]]  || source ~/.pythonsetup
 
 # pnpm
 export PNPM_HOME="/Users/jonan/Library/pnpm"

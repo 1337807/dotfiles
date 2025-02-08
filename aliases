@@ -33,7 +33,7 @@ alias bb="vim ~/src/dotfiles/brewfile"
 alias brewup="brew bundle --file=~/src/dotfiles/brewfile"
 
 alias conf="vim ~/src/dotfiles"
-alias python="python3.11"
+alias python="python3.12"
 alias pip="pip3"
 
 alias mm="cd /Users/jonan/Library/Application\ Support/minecraft/saves"
@@ -99,6 +99,14 @@ alias pem="convert_pub_to_pem"
 alias enc="encrypt_file_with_public_key"
 
 alias flush="sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder"
+
+alias fonts="/Users/jonan/src/dotfiles/scripts/install_nerd_fonts.sh"
+
+mx() {
+  unset RUBYOPT
+  mise exec -- "$@"
+  export RUBYOPT="-W:no-deprecated -W:no-experimental"
+}
 
 function encrypt_file_with_public_key() {
   pem_file=`convert_pub_to_pem $2`

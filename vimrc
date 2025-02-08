@@ -40,6 +40,7 @@ Plug 'tpope/vim-surround'
 Plug 'vim-airline/vim-airline'
 Plug 'Tarrasch/zsh-autoenv'
 Plug 'ryanoasis/vim-devicons'
+Plug 'neovim/nvim-lspconfig'
 " changed from tiagofumo to johnstef99 to prevent 'E5248: Invalid character in
 " group name' warnings in neovim
 Plug 'johnstef99/vim-nerdtree-syntax-highlight'
