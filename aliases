@@ -1,24 +1,17 @@
+# === Config ===
+YEAR=2025
+DROPBOX_NOTES=~/Dropbox/$YEAR/notes
+DOTFILES=~/src/dotfiles
+
+# === Navigation Aliases ===
 alias s="cd ~/src"
-alias sy="say -v 'Sandy en_GB'"
 alias dk="cd ~/docker"
-alias dot="cd ~/src/dotfiles"
+alias dot="cd $DOTFILES"
+alias n="mkdir -p $DROPBOX_NOTES; vim $DROPBOX_NOTES"
+alias nn="mkdir -p $DROPBOX_NOTES; cd $DROPBOX_NOTES"
+alias drop="mkdir -p ~/Dropbox/$YEAR; cd ~/Dropbox/$YEAR"
 
-alias n="mkdir -p ~/Dropbox/2025/notes; vim ~/Dropbox/2025/notes"
-alias nn="mkdir -p ~/Dropbox/2025/notes; cd ~/Dropbox/2025/notes"
-alias be="bundle exec"
-alias ag='ag --path-to-ignore ~/.agignore'
-
-alias killen='sudo pfctl -Fa -f ~/.killswitch.pf.conf -e'
-alias killoff='sudo pfctl -Fa -f /etc/pf.conf -e'
-alias killdis='sudo pfctl -d'
-
-alias showall='defaults write com.apple.finder AppleShowAllFiles TRUE; killall finder'
-alias hideall='defaults write com.apple.finder AppleShowAllFiles FALSE; killall finder'
-
-alias kglock='sudo pfctl -Fa -f /etc/kg.pf.conf -e'
-alias kgunlock='sudo pfctl -Fa -f /etc/pf.conf -e'
-
-alias drop="mkdir -p ~/Dropbox/2025; cd ~/Dropbox/2025"
+# === Editing Aliases ===
 alias vim="nvim"
 alias v="vim ."
 alias vv="vim ~/.vimrc"
@@ -28,29 +21,60 @@ alias e="vim ~/.global.env; source ~/.global.env"
 alias t="vim ~/.tmux.conf; tmux source ~/.tmux.conf"
 alias ss="vim ~/.ssh/config"
 alias oo="vim ~/Dropbox/obsidian"
-alias m="macdown"
-alias bb="vim ~/src/dotfiles/brewfile"
-alias brewup="brew bundle --file=~/src/dotfiles/brewfile"
+alias conf="vim $DOTFILES"
+alias bb="vim $DOTFILES/brewfile"
+alias brewup="brew bundle --file=$DOTFILES/brewfile"
 
-alias conf="vim ~/src/dotfiles"
+# === Finder Aliases ===
+alias showall='defaults write com.apple.finder AppleShowAllFiles TRUE; killall Finder'
+alias hideall='defaults write com.apple.finder AppleShowAllFiles FALSE; killall Finder'
+
+# === Search Aliases ===
+alias ag='ag --path-to-ignore ~/.agignore'
+
+# === Ruby & Bundler Aliases ===
+alias be="bundle exec"
+mx() {
+  unset RUBYOPT
+  mise exec -- "$@"
+  export RUBYOPT="-W:no-deprecated -W:no-experimental"
+}
+
+# === Python Aliases ===
 alias python="python3.12"
 alias pip="pip3"
 
-alias mm="cd /Users/jonan/Library/Application\ Support/minecraft/saves"
+# === Network & Firewall Aliases ===
+alias killen='sudo pfctl -Fa -f ~/.killswitch.pf.conf -e'
+alias killoff='sudo pfctl -Fa -f /etc/pf.conf -e'
+alias killdis='sudo pfctl -d'
+alias kglock='sudo pfctl -Fa -f /etc/kg.pf.conf -e'
+alias kgunlock='sudo pfctl -Fa -f /etc/pf.conf -e'
+alias flush="sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder"
 
-alias cb="cargo build"
-alias crates="cd /Users/jonanscheffler/src/criner; cargo run --release -- mine"
-alias spotify="spt"
+# === Docker Aliases ===
+alias de="docker exec -it"
+alias ds="docker_shell"
+alias dr="docker_run"
+alias dp="docker ps"
+alias di="docker images"
+alias dl="docker logs"
+alias dcl="docker container list --all"
+alias db="docker buildx"
+alias dcr="docker container rm"
 
+# PostgreSQL
 alias pg="docker start postgresql"
-alias pgr="docker run --name postgresql -d -p 5432:5432 -e POSTGRES_HOST_AUTH_METHOD=trust -v /var/run/postgresql:/tmp -v /Users/jonan/pgdata:/var/lib/postgresql/data postgres"
+alias pgr="docker run --name postgresql -d -p 5432:5432 -e POSTGRES_HOST_AUTH_METHOD=trust -v /var/run/postgresql:/tmp -v ~/pgdata:/var/lib/postgresql/data postgres"
 alias pgx="docker stop postgresql"
 alias pq="docker exec -it postgresql psql -U postgres"
 
+# Redis
 alias red="docker start redis"
 alias redr="docker run --name redis -d -p 6379:6379 redis redis-server --appendonly yes"
 alias reds="docker stop redis"
 
+# === Git Aliases ===
 alias gs="git status"
 alias ga="git add"
 alias gc="git commit"
@@ -65,66 +89,60 @@ alias grap="git_remote_add_push"
 alias gg="gic && hc && grap"
 alias ggp="gic && hcp && grap"
 
-alias h="heroku"
-alias hd="git push heroku main"
-
-# use repo/delete_repo classic oauth token as password for hub login
+# GitHub CLI
 alias hc="hub create"
 alias hcp="hub create -p"
 alias hb="hub browse"
 alias hd="hub delete thejonanshow/${PWD##*/}"
 
-alias de="docker exec -it"
-alias ds="docker_shell"
-alias dr="docker_run"
-alias dp="docker ps"
-alias di="docker images"
-alias dl="docker logs"
-alias dcl="docker container list --all"
-alias db="docker buildx"
-alias dcr="docker container rm"
-
+# === Kubernetes Aliases ===
 alias k="kubectl"
 alias kg="kubectl get"
 alias kd="kubectl delete"
 alias kl="kubectl logs"
 
+# === Testing Aliases ===
 alias rr="rake spec"
 alias ff="rspec --next-failure"
 
+# === Compression & Encryption ===
 alias tarc="tar_compress"
 alias tarx="tar_decompress"
-
 alias pem="convert_pub_to_pem"
 alias enc="encrypt_file_with_public_key"
 
-alias flush="sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder"
+# === Miscellaneous ===
+alias spotify="spt"
+alias sy="say -v 'Sandy en_GB'"
+alias m="macdown"
+alias fonts="$DOTFILES/scripts/install_nerd_fonts.sh"
+alias mm="cd ~/Library/Application\ Support/minecraft/saves"
 
-alias fonts="/Users/jonan/src/dotfiles/scripts/install_nerd_fonts.sh"
+# === Cargo & Rust Aliases ===
+alias cb="cargo build"
+alias crates="cd ~/src/criner; cargo run --release -- mine"
 
-mx() {
-  unset RUBYOPT
-  mise exec -- "$@"
-  export RUBYOPT="-W:no-deprecated -W:no-experimental"
-}
+# === Heroku Aliases ===
+alias h="heroku"
+alias hd="git push heroku main"
 
+# === Functions ===
 function encrypt_file_with_public_key() {
-  pem_file=`convert_pub_to_pem $2`
-  `cat $1 | openssl rsautl -encrypt -pubin -inkey $pem_file > $1.enc`
+  pem_file=$(convert_pub_to_pem "$2")
+  cat "$1" | openssl rsautl -encrypt -pubin -inkey "$pem_file" > "$1.enc"
   echo "$1 was encrypted with $2: $1.enc"
-  echo "To decrypt:"
-  echo "cat $1.enc | openssl rsautl -decrypt -inkey ~/.ssh/id_rsa"
+  echo "To decrypt: cat $1.enc | openssl rsautl -decrypt -inkey ~/.ssh/id_rsa"
 }
 
 function convert_pub_to_pem() {
-  name=`basename $1 .pub`
-  ssh-keygen -f $1 -e -m PKCS8 > $name.pem.pub
-  echo $name.pem.pub
+  name=$(basename "$1" .pub)
+  ssh-keygen -f "$1" -e -m PKCS8 > "$name.pem.pub"
+  echo "$name.pem.pub"
 }
 
 function docker_shell() {
   last_id=$(docker container ls -lq)
-  docker exec -it $last_id /bin/bash
+  docker exec -it "$last_id" /bin/bash
 }
 
 function git_remote_add_push() {
@@ -134,21 +152,22 @@ function git_remote_add_push() {
 }
 
 function docker_run() {
-  docker run -it --rm $(docker images | awk '{print $3}' | awk 'NR==2') /bin/sh
+  docker run -it --rm "$(docker images | awk 'NR==2 {print $3}')" /bin/sh
 }
 
 function tar_compress() {
-  tar -cvzf $1.tar.gz $1
+  tar -cvzf "$1.tar.gz" "$1"
 }
 
 function tar_decompress() {
-  tar -xvzf $1
+  tar -xvzf "$1"
 }
 
 function furyi() {
-  gem install $1 -s $(ruby -e "print ['https://', File.read(File.join(Dir.home, '.netrc')).match(/fury.+\n.+\n\  password (.+)/)[1] + '@gem.fury.io/thejonanshow/'].join.strip")
+  gem install "$1" -s "$(ruby -e "print ['https://', File.read(File.join(Dir.home, '.netrc')).match(/fury.+\n.+\n\  password (.+)/)[1] + '@gem.fury.io/thejonanshow/'].join.strip")"
 }
 
 function gemfury_source() {
-   ruby -e "print ['https://', File.read(File.join(Dir.home, '.netrc')).match(/fury.+\n.+\n\  password (.+)/)[1] + '@gem.fury.io/thejonanshow/'].join.strip" | pbcopy && echo "copied gemfury source!"
+  ruby -e "print ['https://', File.read(File.join(Dir.home, '.netrc')).match(/fury.+\n.+\n\  password (.+)/)[1] + '@gem.fury.io/thejonanshow/'].join.strip" | pbcopy
+  echo "Copied Gemfury source!"
 }
