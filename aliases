@@ -120,7 +120,6 @@ alias mm="cd ~/Library/Application\ Support/minecraft/saves"
 
 # === Cargo & Rust Aliases ===
 alias cb="cargo build"
-alias crates="cd ~/src/criner; cargo run --release -- mine"
 
 # === Heroku Aliases ===
 alias h="heroku"
@@ -128,19 +127,22 @@ alias hd="git push heroku main"
 
 # === Functions ===
 function encrypt_file_with_public_key() {
+  local pem_file
   pem_file=$(convert_pub_to_pem "$2")
-  cat "$1" | openssl rsautl -encrypt -pubin -inkey "$pem_file" > "$1.enc"
+  openssl rsautl -encrypt -pubin -inkey "$pem_file" < "$1" > "$1.enc"
   echo "$1 was encrypted with $2: $1.enc"
-  echo "To decrypt: cat $1.enc | openssl rsautl -decrypt -inkey ~/.ssh/id_rsa"
+  echo "To decrypt: openssl rsautl -decrypt -inkey ~/.ssh/id_rsa < $1.enc"
 }
 
 function convert_pub_to_pem() {
+  local name
   name=$(basename "$1" .pub)
   ssh-keygen -f "$1" -e -m PKCS8 > "$name.pem.pub"
   echo "$name.pem.pub"
 }
 
 function docker_shell() {
+  local last_id
   last_id=$(docker container ls -lq)
   docker exec -it "$last_id" /bin/bash
 }
@@ -163,6 +165,14 @@ function tar_decompress() {
   tar -xvzf "$1"
 }
 
+deployvim() {
+  if [ -z "$1" ]; then
+    echo "Usage: deployvim <server>"
+    return 1
+  fi
+  ssh "$1" "curl -sL https://raw.githubusercontent.com/thejonanshow/vimlite/refs/heads/master/.vimrc -o ~/.vimrc"
+}
+
 function furyi() {
   gem install "$1" -s "$(ruby -e "print ['https://', File.read(File.join(Dir.home, '.netrc')).match(/fury.+\n.+\n\  password (.+)/)[1] + '@gem.fury.io/thejonanshow/'].join.strip")"
 }
@@ -170,4 +180,31 @@ function furyi() {
 function gemfury_source() {
   ruby -e "print ['https://', File.read(File.join(Dir.home, '.netrc')).match(/fury.+\n.+\n\  password (.+)/)[1] + '@gem.fury.io/thejonanshow/'].join.strip" | pbcopy
   echo "Copied Gemfury source!"
+}
+
+crates() {
+  local repo_dir="$HOME/src/criner"
+
+  if [ ! -d "$repo_dir/.git" ]; then
+    echo "Cloning criner repository..."
+    git clone git@github.com:the-lean-crate/criner.git "$repo_dir"
+  else
+    echo "Checking for updates in criner repository..."
+    cd "$repo_dir" || exit 1
+
+    # Ensure we are on the main branch and fetch latest updates
+    git fetch origin
+
+    # Check if working directory is clean
+    if [ -z "$(git status --porcelain=v1 2>/dev/null)" ]; then
+      echo "Repository is clean. Pulling latest changes..."
+      git pull --rebase
+    else
+      echo "WARNING: Local changes detected in criner repository."
+      echo "Run 'git stash' or 'git commit' before updating."
+      return 1
+    fi
+  fi
+
+  cargo run --release -- mine
 }
